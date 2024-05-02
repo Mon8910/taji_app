@@ -1,31 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:task_appp/cubit/cubit/resturants_cubit.dart';
+import 'package:task_appp/restrunat/models/resturants_model.dart';
 
 class Test2 extends StatelessWidget {
   const Test2({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const
-       SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Explore by category',
-              style: TextStyle(
-                  fontSize: 18,
-                  color: Color.fromARGB(255, 0, 0, 0),
-                  fontWeight: FontWeight.w700),
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            CategoryRestaurant(),
-            CardRestaurant()
-          ],
-        ),
-      );
-    
+    return  SafeArea(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+         const Text(
+            'Explore by category',
+            style: TextStyle(
+                fontSize: 18,
+                color: Color.fromARGB(255, 0, 0, 0),
+                fontWeight: FontWeight.w700),
+          ),
+         const SizedBox(
+            height: 15,
+          ),
+          CategoryRestaurant(),
+          BlocBuilder<ResturantsCubit, ResturantsState>(
+            builder: (context, state) {
+             if(state is ResturantsSuccess){
+               return CardRestaurant(resturants: state.resturants,);
+             }
+             else if(state is ResturantsFailure){
+              return Text(state.errorMessage);
+             }else{
+            return const   Center(child: CircularProgressIndicator(),);
+             }
+            },
+          )
+        ],
+      ),
+    );
   }
 }
 
@@ -77,7 +89,8 @@ class CategoryRestaurant extends StatelessWidget {
 }
 
 class CardRestaurant extends StatelessWidget {
-  const CardRestaurant({super.key});
+  const CardRestaurant({super.key, required this.resturants});
+  final List<ResturantsModel>resturants;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -95,9 +108,9 @@ class CardRestaurant extends StatelessWidget {
                       AspectRatio(
                         aspectRatio: 3 / 2,
                         child: Container(
-                          decoration: const BoxDecoration(
+                          decoration:  BoxDecoration(
                               image: DecorationImage(
-                                  image: AssetImage('assets/images/food.png'),
+                                  image: NetworkImage(resturants[index].image!['url']),
                                   fit: BoxFit.fill)),
                         ),
                       ),
@@ -123,9 +136,9 @@ class CardRestaurant extends StatelessWidget {
                   const SizedBox(
                     height: 20,
                   ),
-                  const Text(
-                    'Madaen Restaurant',
-                    style: TextStyle(
+                   Text(
+                    resturants[index].name!['en'],
+                    style:const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
                         color: Color.fromARGB(255, 0, 0, 0)),
@@ -133,7 +146,7 @@ class CardRestaurant extends StatelessWidget {
                   const SizedBox(
                     height: 10,
                   ),
-                  const Text(
+                   Text(
                     'Dubai, Deira',
                     style: TextStyle(
                         fontSize: 11,

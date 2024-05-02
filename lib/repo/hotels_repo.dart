@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:task_appp/api/api_consumer.dart';
@@ -16,7 +15,7 @@ class HotelsRepo {
   for(var hotelss in response['data']){
     hotels.add(HotelModels.fromJson(hotelss));
   }
-  print(response);
+  
   
   return Right(hotels);
 } on ServerException catch (e) {
