@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_appp/core/constant/widgets.dart';
+import 'package:task_appp/cubit/cubit/category_cubit.dart';
 import 'package:task_appp/cubit/hotelscuibt_cubit.dart';
 import 'package:task_appp/models/hotels_model.dart';
+import 'package:task_appp/restrunat/models/category_model.dart';
 
 class Test1 extends StatelessWidget {
   const Test1({super.key});
@@ -12,7 +14,7 @@ class Test1 extends StatelessWidget {
 
       child: CustomScrollView(
         slivers: [
-         const SliverToBoxAdapter(
+          SliverToBoxAdapter(
             child: Column(
               
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -20,7 +22,7 @@ class Test1 extends StatelessWidget {
                 SizedBox(height: 30,),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15.0),
-                  child: Text(
+                  child:  Text(
                     'Explore by category',
                     style: TextStyle(
                         fontSize: 18,
@@ -31,7 +33,20 @@ class Test1 extends StatelessWidget {
                 SizedBox(
                   height: 15,
                 ),
-                CategoryHotels(),
+                BlocBuilder<CategoryCubit, CategoryState>(
+            builder: (context, state) {
+             if(state is CategorySuccess){
+               return CategoryRestaurant(category: state.category,);
+             }else if(state is CategoryFailure){
+              return Text(state.message);
+             }
+             else{
+              return const Center(
+                  child: CircularProgressIndicator(),
+                );
+             }
+            },
+          ),
                 SizedBox(
                   height: 30,
                 ),
@@ -74,16 +89,16 @@ class Test1 extends StatelessWidget {
   }
 }
 
-class CategoryHotels extends StatelessWidget {
-  const CategoryHotels({super.key});
-  
+class CategoryRestaurant extends StatelessWidget {
+  const CategoryRestaurant({super.key, required this.category});
+  final List<CategoryModel>category;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: MediaQuery.of(context).size.height * .13,
       child: ListView.builder(
           scrollDirection: Axis.horizontal,
-          itemCount: 10,
+          itemCount: category.length,
           itemBuilder: (context, index) {
             return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -95,20 +110,20 @@ class CategoryHotels extends StatelessWidget {
                       child: AspectRatio(
                         aspectRatio: 1,
                         child: Container(
-                          //  height: 100,
+                           height: 100,
 
-                          decoration: const BoxDecoration(
+                          decoration:  BoxDecoration(
                               color: Colors.red,
                               image: DecorationImage(
                                   image:
-                                      AssetImage('assets/images/category.png'),
+                                      NetworkImage(category[index].image?['url']?? 'https://storage.tajj.xyz/1/uploads-Categories-b0197645-e451-4c37-bd53-9e9121e1203c.png'),
                                   fit: BoxFit.fill)),
                         ),
                       ),
                     ),
-                    const Text(
-                      'data words',
-                      style: TextStyle(
+                     Text(
+                    category[index].name['en'],
+                      style:const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           color: Color.fromARGB(255, 0, 0, 0)),
@@ -120,7 +135,6 @@ class CategoryHotels extends StatelessWidget {
     );
   }
 }
-
 class AllHotelsCard extends StatelessWidget {
   const AllHotelsCard({super.key, required this.hotelModel});
  final List<HotelModels> hotelModel;

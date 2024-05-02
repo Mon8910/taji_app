@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:task_appp/cubit/cubit/category_cubit.dart';
 import 'package:task_appp/cubit/cubit/resturants_cubit.dart';
+import 'package:task_appp/restrunat/models/category_model.dart';
 import 'package:task_appp/restrunat/models/resturants_model.dart';
 
 class Test2 extends StatelessWidget {
@@ -19,12 +21,23 @@ class Test2 extends StatelessWidget {
                 color: Color.fromARGB(255, 0, 0, 0),
                 fontWeight: FontWeight.w700),
           ),
-          
           const SizedBox(
             height: 15,
           ),
-          
-          CategoryRestaurant(),
+          BlocBuilder<CategoryCubit, CategoryState>(
+            builder: (context, state) {
+             if(state is CategorySuccess){
+               return CategoryRestaurant(category: state.category,);
+             }else if(state is CategoryFailure){
+              return Text(state.message);
+             }
+             else{
+              return const Center(
+                  child: CircularProgressIndicator(),
+                );
+             }
+            },
+          ),
           BlocBuilder<ResturantsCubit, ResturantsState>(
             builder: (context, state) {
               if (state is ResturantsSuccess) {
@@ -48,14 +61,15 @@ class Test2 extends StatelessWidget {
 
 //==================
 class CategoryRestaurant extends StatelessWidget {
-  const CategoryRestaurant({super.key});
+  const CategoryRestaurant({super.key, required this.category});
+  final List<CategoryModel>category;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: MediaQuery.of(context).size.height * .13,
       child: ListView.builder(
           scrollDirection: Axis.horizontal,
-          itemCount: 10,
+          itemCount: category.length,
           itemBuilder: (context, index) {
             return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -67,20 +81,20 @@ class CategoryRestaurant extends StatelessWidget {
                       child: AspectRatio(
                         aspectRatio: 1,
                         child: Container(
-                          //  height: 100,
+                           height: 100,
 
-                          decoration: const BoxDecoration(
+                          decoration:  BoxDecoration(
                               color: Colors.red,
                               image: DecorationImage(
                                   image:
-                                      AssetImage('assets/images/category.png'),
+                                      NetworkImage(category[index].image?['url']?? 'https://storage.tajj.xyz/1/uploads-Categories-b0197645-e451-4c37-bd53-9e9121e1203c.png'),
                                   fit: BoxFit.fill)),
                         ),
                       ),
                     ),
-                    const Text(
-                      'data words',
-                      style: TextStyle(
+                     Text(
+                    category[index].name['en'],
+                      style:const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           color: Color.fromARGB(255, 0, 0, 0)),
@@ -101,7 +115,7 @@ class CardRestaurant extends StatelessWidget {
     return SizedBox(
       height: MediaQuery.of(context).size.height * .4,
       child: ListView.builder(
-          itemCount: 10,
+          itemCount: resturants.length,
           itemBuilder: (context, index) {
             return Card(
               child: Column(

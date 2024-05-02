@@ -2,11 +2,13 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_appp/api/dio_consumer.dart';
+import 'package:task_appp/cubit/cubit/category_cubit.dart';
 import 'package:task_appp/cubit/cubit/resturants_cubit.dart';
 import 'package:task_appp/cubit/hotelscuibt_cubit.dart';
 import 'package:task_appp/home.dart';
 import 'package:task_appp/hotel_body.dart';
 import 'package:task_appp/repo/hotels_repo.dart';
+import 'package:task_appp/restrunat/repo.dart/category_repo.dart';
 import 'package:task_appp/restrunat/repo.dart/resturants_repo.dart';
 import 'package:task_appp/restrunat/test2.dart';
 
@@ -29,18 +31,30 @@ class MainPage extends StatelessWidget {
         providers: [
           BlocProvider(
             create: (context) => HotelscuibtCubit(
-                HotelsRepo(apiConsumer: DioConsumer(dio: Dio(),),),)
-              ..getAllData(),
-          ),
-          BlocProvider(
-            create: (context) => ResturantsCubit(
-              ResturantsRepo(
+              HotelsRepo(
                 apiConsumer: DioConsumer(
                   dio: Dio(),
                 ),
               ),
-            )..getData()
-          )
+            )..getAllData(),
+          ),
+          BlocProvider(
+              create: (context) => ResturantsCubit(
+                    ResturantsRepo(
+                      apiConsumer: DioConsumer(
+                        dio: Dio(),
+                      ),
+                    ),
+                  )..getData()),
+          BlocProvider(
+            create: ((context) => CategoryCubit(
+                  CategoryRepo(
+                    apiConsumer: DioConsumer(
+                      dio: Dio(),
+                    ),
+                  ),
+                )..getAll()),
+          ),
         ],
         child: const MaterialApp(
           home: HomeView(),

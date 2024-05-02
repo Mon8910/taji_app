@@ -18,7 +18,7 @@ class ResturantsRepo {
       for (var elements in data['data']) {
         restaurants.add(ResturantsModel.fromJson(elements));
       }
-      log('===================$data');
+      
       return Right(restaurants);
     } on ServerException catch (e) {
       return  Left(e.errorModel.message);
