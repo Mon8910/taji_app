@@ -8,31 +8,36 @@ class Test2 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  SafeArea(
+    return SafeArea(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-         const Text(
+          const Text(
             'Explore by category',
             style: TextStyle(
                 fontSize: 18,
                 color: Color.fromARGB(255, 0, 0, 0),
                 fontWeight: FontWeight.w700),
           ),
-         const SizedBox(
+          
+          const SizedBox(
             height: 15,
           ),
+          
           CategoryRestaurant(),
           BlocBuilder<ResturantsCubit, ResturantsState>(
             builder: (context, state) {
-             if(state is ResturantsSuccess){
-               return CardRestaurant(resturants: state.resturants,);
-             }
-             else if(state is ResturantsFailure){
-              return Text(state.errorMessage);
-             }else{
-            return const   Center(child: CircularProgressIndicator(),);
-             }
+              if (state is ResturantsSuccess) {
+                return CardRestaurant(
+                  resturants: state.resturants,
+                );
+              } else if (state is ResturantsFailure) {
+                return Text(state.errorMessage);
+              } else {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
             },
           )
         ],
@@ -90,7 +95,7 @@ class CategoryRestaurant extends StatelessWidget {
 
 class CardRestaurant extends StatelessWidget {
   const CardRestaurant({super.key, required this.resturants});
-  final List<ResturantsModel>resturants;
+  final List<ResturantsModel> resturants;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -105,13 +110,17 @@ class CardRestaurant extends StatelessWidget {
                   Stack(
                     clipBehavior: Clip.none,
                     children: [
-                      AspectRatio(
-                        aspectRatio: 3 / 2,
-                        child: Container(
-                          decoration:  BoxDecoration(
-                              image: DecorationImage(
-                                  image: NetworkImage(resturants[index].image!['url']),
-                                  fit: BoxFit.fill)),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: AspectRatio(
+                          aspectRatio: 3 / 2,
+                          child: Container(
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    image: NetworkImage(
+                                        resturants[index].image!['url']),
+                                    fit: BoxFit.fill)),
+                          ),
                         ),
                       ),
                       Positioned(
@@ -136,9 +145,9 @@ class CardRestaurant extends StatelessWidget {
                   const SizedBox(
                     height: 20,
                   ),
-                   Text(
+                  Text(
                     resturants[index].name!['en'],
-                    style:const TextStyle(
+                    style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
                         color: Color.fromARGB(255, 0, 0, 0)),
@@ -146,7 +155,7 @@ class CardRestaurant extends StatelessWidget {
                   const SizedBox(
                     height: 10,
                   ),
-                   Text(
+                  Text(
                     'Dubai, Deira',
                     style: TextStyle(
                         fontSize: 11,

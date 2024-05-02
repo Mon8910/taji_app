@@ -18,12 +18,15 @@ class Test1 extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(height: 30,),
-                Text(
-                  'Explore by category',
-                  style: TextStyle(
-                      fontSize: 18,
-                      color: Color.fromARGB(255, 0, 0, 0),
-                      fontWeight: FontWeight.w700),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15.0),
+                  child: Text(
+                    'Explore by category',
+                    style: TextStyle(
+                        fontSize: 18,
+                        color: Color.fromARGB(255, 0, 0, 0),
+                        fontWeight: FontWeight.w700),
+                  ),
                 ),
                 SizedBox(
                   height: 15,
@@ -32,12 +35,15 @@ class Test1 extends StatelessWidget {
                 SizedBox(
                   height: 30,
                 ),
-                Text(
-                  'All Hotels',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 18,
-                      color: Color.fromARGB(255, 0, 0, 0)),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  child: Text(
+                    'All Hotels',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 18,
+                        color: Color.fromARGB(255, 0, 0, 0)),
+                  ),
                 ),
                 SizedBox(
                   height: 10,
@@ -131,13 +137,16 @@ class AllHotelsCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  AspectRatio(
-                    aspectRatio: 1.1,
-                    child: Container(
-                      decoration:  BoxDecoration(
-                          image: DecorationImage(
-                              image: NetworkImage('${hotelModel[index].image?["url"]}'),
-                              fit: BoxFit.fill)),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: AspectRatio(
+                      aspectRatio: 1.1,
+                      child: Container(
+                        decoration:  BoxDecoration(
+                            image: DecorationImage(
+                                image: NetworkImage('${hotelModel[index].image?["url"]}'),
+                                fit: BoxFit.fill)),
+                      ),
                     ),
                   ),
                   const SizedBox(
